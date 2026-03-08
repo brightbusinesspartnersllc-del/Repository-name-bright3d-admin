@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import type { ReactNode, CSSProperties, FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../../lib/supabaseClient";
 
 export default function AdminLayout({
   children,
@@ -10,6 +12,223 @@ export default function AdminLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
+
+  const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    checkSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setLoggedIn(!!session);
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  async function checkSession() {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    setLoggedIn(!!session);
+    setLoading(false);
+  }
+
+  async function handleLogin(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setMessage("");
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setMessage("✅ Login successful");
+  }
+
+  async function handleLogout() {
+    setMessage("");
+    await supabase.auth.signOut();
+  }
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%)",
+          fontFamily:
+            'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        }}
+      >
+        Cargando...
+      </div>
+    );
+  }
+
+  if (!loggedIn) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 20,
+          background: "linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%)",
+          fontFamily:
+            'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: 420,
+            background: "rgba(255,255,255,0.92)",
+            borderRadius: 24,
+            padding: 24,
+            border: "1px solid rgba(255,255,255,0.95)",
+            boxShadow: "0 14px 34px rgba(60, 90, 160, 0.08)",
+          }}
+        >
+          <p
+            style={{
+              margin: 0,
+              fontSize: 12,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#5d78c6",
+              fontWeight: 700,
+            }}
+          >
+            Bright3D Private Access
+          </p>
+
+          <h1
+            style={{
+              margin: "10px 0 10px",
+              fontSize: 28,
+              lineHeight: 1.1,
+              color: "#14213d",
+            }}
+          >
+            Sign in
+          </h1>
+
+          <p
+            style={{
+              margin: "0 0 18px",
+              color: "#60708d",
+              lineHeight: 1.55,
+              fontSize: 14,
+            }}
+          >
+            Solo el equipo de Bright3D puede entrar aquí.
+          </p>
+
+          <form
+            onSubmit={handleLogin}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 14,
+            }}
+          >
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: 8,
+                  fontWeight: 700,
+                  color: "#24324d",
+                  fontSize: 14,
+                }}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={fieldStyle}
+                autoComplete="email"
+              />
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: 8,
+                  fontWeight: 700,
+                  color: "#24324d",
+                  fontSize: 14,
+                }}
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={fieldStyle}
+                autoComplete="current-password"
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                marginTop: 8,
+                padding: "15px 18px",
+                borderRadius: 16,
+                border: "none",
+                background: "#14213d",
+                color: "white",
+                cursor: "pointer",
+                fontSize: 16,
+                fontWeight: 700,
+                boxShadow: "0 10px 20px rgba(20,33,61,0.18)",
+              }}
+            >
+              Sign In
+            </button>
+
+            {message && (
+              <p
+                style={{
+                  margin: 0,
+                  color: message.startsWith("✅") ? "#15803d" : "#b91c1c",
+                  fontWeight: 600,
+                  fontSize: 14,
+                }}
+              >
+                {message}
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -20,7 +239,29 @@ export default function AdminLayout({
         background: "linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%)",
       }}
     >
-      {/* Top spacing wrapper */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          padding: "10px 14px 0",
+        }}
+      >
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "10px 14px",
+            borderRadius: 14,
+            border: "1px solid #d9e2f2",
+            background: "white",
+            color: "#24324d",
+            cursor: "pointer",
+            fontWeight: 700,
+          }}
+        >
+          Log out
+        </button>
+      </div>
+
       <div
         style={{
           flex: 1,
@@ -31,7 +272,6 @@ export default function AdminLayout({
         {children}
       </div>
 
-      {/* Bottom nav */}
       <nav
         style={{
           position: "sticky",
@@ -60,28 +300,24 @@ export default function AdminLayout({
             label="Home"
             active={pathname === "/admin"}
           />
-
           <NavItem
             href="/admin/products"
             emoji="📦"
             label="Products"
             active={pathname === "/admin/products"}
           />
-
           <NavItem
             href="/admin/variants"
             emoji="📏"
             label="Variants"
             active={pathname === "/admin/variants"}
           />
-
           <NavItem
             href="/admin/quotes"
             emoji="🧮"
             label="Quotes"
             active={pathname === "/admin/quotes"}
           />
-
           <NavItem
             href="/admin/quotes-history"
             emoji="🗂️"
@@ -132,14 +368,7 @@ function NavItem({
           padding: "6px 4px",
         }}
       >
-        <span
-          style={{
-            fontSize: 20,
-            lineHeight: 1,
-          }}
-        >
-          {emoji}
-        </span>
+        <span style={{ fontSize: 20, lineHeight: 1 }}>{emoji}</span>
 
         <span
           style={{
@@ -156,3 +385,14 @@ function NavItem({
     </Link>
   );
 }
+
+const fieldStyle: CSSProperties = {
+  width: "100%",
+  padding: "14px 16px",
+  borderRadius: 14,
+  border: "1px solid #d9e2f2",
+  fontSize: 16,
+  outline: "none",
+  boxSizing: "border-box",
+  background: "white",
+};
