@@ -35,6 +35,20 @@ type GlobalCosts = {
   labor_per_hour: number;
 };
 
+type QuoteResult = {
+  filamentCost: number;
+  electricityCost: number;
+  wearCost: number;
+  packagingCost: number;
+  extrasCost: number;
+  errorCost: number;
+  laborCost: number;
+  totalBaseCost: number;
+  breakEvenPrice: number;
+  recommendedPrice: number;
+  estimatedProfit: number;
+};
+
 export default function QuotesPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [variants, setVariants] = useState<Variant[]>([]);
@@ -93,7 +107,7 @@ export default function QuotesPage() {
   const variant = variants.find((v) => v.id === selectedVariant);
   const platform = platforms.find((p) => p.id === selectedPlatform);
 
-  let result = null;
+  let result: QuoteResult | null = null;
 
   if (variant && platform && globalCosts) {
     const printHours = variant.processing_minutes / 60;
@@ -275,7 +289,9 @@ export default function QuotesPage() {
               <InputGroup label="Product">
                 <select
                   value={selectedProduct ?? ""}
-                  onChange={(e) => setSelectedProduct(Number(e.target.value))}
+                  onChange={(e) =>
+                    setSelectedProduct(e.target.value ? Number(e.target.value) : null)
+                  }
                   style={fieldStyle}
                 >
                   <option value="">— Selecciona —</option>
@@ -290,7 +306,9 @@ export default function QuotesPage() {
               <InputGroup label="Variant">
                 <select
                   value={selectedVariant ?? ""}
-                  onChange={(e) => setSelectedVariant(Number(e.target.value))}
+                  onChange={(e) =>
+                    setSelectedVariant(e.target.value ? Number(e.target.value) : null)
+                  }
                   style={fieldStyle}
                 >
                   <option value="">— Selecciona —</option>
@@ -307,7 +325,9 @@ export default function QuotesPage() {
               <InputGroup label="Platform">
                 <select
                   value={selectedPlatform ?? ""}
-                  onChange={(e) => setSelectedPlatform(Number(e.target.value))}
+                  onChange={(e) =>
+                    setSelectedPlatform(e.target.value ? Number(e.target.value) : null)
+                  }
                   style={fieldStyle}
                 >
                   <option value="">— Selecciona —</option>
