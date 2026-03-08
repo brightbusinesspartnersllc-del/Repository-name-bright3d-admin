@@ -68,17 +68,7 @@ export default function AdminLayout({
 
   if (loading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%)",
-          fontFamily:
-            'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        }}
-      >
+      <div style={loadingStyle}>
         Cargando...
       </div>
     );
@@ -86,61 +76,17 @@ export default function AdminLayout({
 
   if (!loggedIn) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 20,
-          background: "linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%)",
-          fontFamily:
-            'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 420,
-            background: "rgba(255,255,255,0.92)",
-            borderRadius: 24,
-            padding: 24,
-            border: "1px solid rgba(255,255,255,0.95)",
-            boxShadow: "0 14px 34px rgba(60, 90, 160, 0.08)",
-          }}
-        >
-          <p
-            style={{
-              margin: 0,
-              fontSize: 12,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "#5d78c6",
-              fontWeight: 700,
-            }}
-          >
+      <div style={loginPage}>
+        <div style={loginCard}>
+          <p style={loginTag}>
             Bright3D Private Access
           </p>
 
-          <h1
-            style={{
-              margin: "10px 0 10px",
-              fontSize: 28,
-              lineHeight: 1.1,
-              color: "#14213d",
-            }}
-          >
+          <h1 style={loginTitle}>
             Sign in
           </h1>
 
-          <p
-            style={{
-              margin: "0 0 18px",
-              color: "#60708d",
-              lineHeight: 1.55,
-              fontSize: 14,
-            }}
-          >
+          <p style={loginSubtitle}>
             Solo el equipo de Bright3D puede entrar aquí.
           </p>
 
@@ -153,17 +99,10 @@ export default function AdminLayout({
             }}
           >
             <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: 8,
-                  fontWeight: 700,
-                  color: "#24324d",
-                  fontSize: 14,
-                }}
-              >
+              <label style={labelStyle}>
                 Email
               </label>
+
               <input
                 type="email"
                 value={email}
@@ -174,17 +113,10 @@ export default function AdminLayout({
             </div>
 
             <div>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: 8,
-                  fontWeight: 700,
-                  color: "#24324d",
-                  fontSize: 14,
-                }}
-              >
+              <label style={labelStyle}>
                 Password
               </label>
+
               <input
                 type="password"
                 value={password}
@@ -196,18 +128,7 @@ export default function AdminLayout({
 
             <button
               type="submit"
-              style={{
-                marginTop: 8,
-                padding: "15px 18px",
-                borderRadius: 16,
-                border: "none",
-                background: "#14213d",
-                color: "white",
-                cursor: "pointer",
-                fontSize: 16,
-                fontWeight: 700,
-                boxShadow: "0 10px 20px rgba(20,33,61,0.18)",
-              }}
+              style={buttonStyle}
             >
               Sign In
             </button>
@@ -231,93 +152,47 @@ export default function AdminLayout({
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        background: "linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          padding: "10px 14px 0",
-        }}
-      >
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: "10px 14px",
-            borderRadius: 14,
-            border: "1px solid #d9e2f2",
-            background: "white",
-            color: "#24324d",
-            cursor: "pointer",
-            fontWeight: 700,
-          }}
-        >
+    <div style={appWrapper}>
+      <div style={topBar}>
+        <button onClick={handleLogout} style={logoutButton}>
           Log out
         </button>
       </div>
 
-      <div
-        style={{
-          flex: 1,
-          width: "100%",
-          boxSizing: "border-box",
-        }}
-      >
+      <div style={{ flex: 1 }}>
         {children}
       </div>
 
-      <nav
-        style={{
-          position: "sticky",
-          bottom: 0,
-          width: "100%",
-          background: "rgba(255,255,255,0.94)",
-          backdropFilter: "blur(14px)",
-          borderTop: "1px solid #dde6f5",
-          boxShadow: "0 -10px 26px rgba(60, 90, 160, 0.10)",
-          padding: "10px 12px calc(12px + env(safe-area-inset-bottom))",
-          zIndex: 50,
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 780,
-            margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
-            gap: 8,
-          }}
-        >
+      <nav style={navBar}>
+        <div style={navGrid}>
           <NavItem
             href="/admin"
             emoji="🏠"
             label="Home"
             active={pathname === "/admin"}
           />
+
           <NavItem
             href="/admin/products"
             emoji="📦"
             label="Products"
             active={pathname === "/admin/products"}
           />
+
           <NavItem
             href="/admin/variants"
             emoji="📏"
             label="Variants"
             active={pathname === "/admin/variants"}
           />
+
           <NavItem
             href="/admin/quotes"
             emoji="🧮"
             label="Quotes"
             active={pathname === "/admin/quotes"}
           />
+
           <NavItem
             href="/admin/quotes-history"
             emoji="🗂️"
@@ -342,13 +217,7 @@ function NavItem({
   active: boolean;
 }) {
   return (
-    <Link
-      href={href}
-      style={{
-        textDecoration: "none",
-        color: "inherit",
-      }}
-    >
+    <Link href={href} style={{ textDecoration: "none" }}>
       <div
         style={{
           minHeight: 70,
@@ -361,22 +230,17 @@ function NavItem({
           background: active ? "#14213d" : "white",
           border: active ? "1px solid #14213d" : "1px solid #e6edf8",
           boxShadow: active
-            ? "0 10px 22px rgba(20, 33, 61, 0.22)"
+            ? "0 10px 22px rgba(20,33,61,0.22)"
             : "0 6px 16px rgba(60, 90, 160, 0.06)",
-          transform: active ? "translateY(-2px)" : "none",
-          transition: "all 0.2s ease",
-          padding: "6px 4px",
         }}
       >
-        <span style={{ fontSize: 20, lineHeight: 1 }}>{emoji}</span>
+        <span style={{ fontSize: 20 }}>{emoji}</span>
 
         <span
           style={{
             fontSize: 11,
             fontWeight: 700,
             color: active ? "white" : "#52627f",
-            letterSpacing: "0.01em",
-            textAlign: "center",
           }}
         >
           {label}
@@ -395,4 +259,107 @@ const fieldStyle: CSSProperties = {
   outline: "none",
   boxSizing: "border-box",
   background: "white",
+  color: "#14213d",
+};
+
+const loadingStyle: CSSProperties = {
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "linear-gradient(180deg,#f8fbff,#eef4ff)",
+};
+
+const loginPage: CSSProperties = {
+  minHeight: "100vh",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 20,
+  background: "linear-gradient(180deg,#f8fbff,#eef4ff)",
+};
+
+const loginCard: CSSProperties = {
+  width: "100%",
+  maxWidth: 420,
+  background: "white",
+  borderRadius: 24,
+  padding: 24,
+  boxShadow: "0 14px 34px rgba(60,90,160,0.08)",
+};
+
+const loginTag: CSSProperties = {
+  fontSize: 12,
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+  color: "#5d78c6",
+  fontWeight: 700,
+};
+
+const loginTitle: CSSProperties = {
+  margin: "10px 0",
+  fontSize: 28,
+  color: "#14213d",
+};
+
+const loginSubtitle: CSSProperties = {
+  marginBottom: 18,
+  color: "#60708d",
+  fontSize: 14,
+};
+
+const labelStyle: CSSProperties = {
+  display: "block",
+  marginBottom: 8,
+  fontWeight: 700,
+  color: "#24324d",
+};
+
+const buttonStyle: CSSProperties = {
+  marginTop: 8,
+  padding: "15px",
+  borderRadius: 16,
+  border: "none",
+  background: "#14213d",
+  color: "white",
+  fontSize: 16,
+  fontWeight: 700,
+  cursor: "pointer",
+};
+
+const appWrapper: CSSProperties = {
+  minHeight: "100vh",
+  display: "flex",
+  flexDirection: "column",
+  background: "linear-gradient(180deg,#f8fbff,#eef4ff)",
+};
+
+const topBar: CSSProperties = {
+  display: "flex",
+  justifyContent: "flex-end",
+  padding: "10px 14px",
+};
+
+const logoutButton: CSSProperties = {
+  padding: "10px 14px",
+  borderRadius: 14,
+  border: "1px solid #d9e2f2",
+  background: "white",
+  cursor: "pointer",
+};
+
+const navBar: CSSProperties = {
+  position: "sticky",
+  bottom: 0,
+  background: "white",
+  borderTop: "1px solid #dde6f5",
+  padding: "10px",
+};
+
+const navGrid: CSSProperties = {
+  maxWidth: 780,
+  margin: "0 auto",
+  display: "grid",
+  gridTemplateColumns: "repeat(5,1fr)",
+  gap: 8,
 };
