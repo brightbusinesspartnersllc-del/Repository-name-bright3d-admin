@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode, CSSProperties, FormEvent } from "react";
+import type { ReactNode, FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
@@ -109,6 +109,7 @@ export default function AdminLayout({
                 onChange={(e) => setEmail(e.target.value)}
                 style={fieldStyle}
                 autoComplete="email"
+                placeholder="tuemail@ejemplo.com"
               />
             </div>
 
@@ -123,6 +124,7 @@ export default function AdminLayout({
                 onChange={(e) => setPassword(e.target.value)}
                 style={fieldStyle}
                 autoComplete="current-password"
+                placeholder="••••••••"
               />
             </div>
 
@@ -250,19 +252,21 @@ function NavItem({
   );
 }
 
-const fieldStyle: CSSProperties = {
+const fieldStyle = {
   width: "100%",
   padding: "14px 16px",
   borderRadius: 14,
   border: "1px solid #d9e2f2",
   fontSize: 16,
   outline: "none",
-  boxSizing: "border-box",
+  boxSizing: "border-box" as const,
   background: "white",
   color: "#14213d",
+  WebkitTextFillColor: "#14213d",
+  opacity: 1,
 };
 
-const loadingStyle: CSSProperties = {
+const loadingStyle = {
   minHeight: "100vh",
   display: "flex",
   alignItems: "center",
@@ -270,7 +274,7 @@ const loadingStyle: CSSProperties = {
   background: "linear-gradient(180deg,#f8fbff,#eef4ff)",
 };
 
-const loginPage: CSSProperties = {
+const loginPage = {
   minHeight: "100vh",
   display: "flex",
   alignItems: "center",
@@ -279,7 +283,7 @@ const loginPage: CSSProperties = {
   background: "linear-gradient(180deg,#f8fbff,#eef4ff)",
 };
 
-const loginCard: CSSProperties = {
+const loginCard = {
   width: "100%",
   maxWidth: 420,
   background: "white",
@@ -288,34 +292,34 @@ const loginCard: CSSProperties = {
   boxShadow: "0 14px 34px rgba(60,90,160,0.08)",
 };
 
-const loginTag: CSSProperties = {
+const loginTag = {
   fontSize: 12,
   letterSpacing: "0.12em",
-  textTransform: "uppercase",
+  textTransform: "uppercase" as const,
   color: "#5d78c6",
   fontWeight: 700,
 };
 
-const loginTitle: CSSProperties = {
+const loginTitle = {
   margin: "10px 0",
   fontSize: 28,
   color: "#14213d",
 };
 
-const loginSubtitle: CSSProperties = {
+const loginSubtitle = {
   marginBottom: 18,
   color: "#60708d",
   fontSize: 14,
 };
 
-const labelStyle: CSSProperties = {
+const labelStyle = {
   display: "block",
   marginBottom: 8,
   fontWeight: 700,
   color: "#24324d",
 };
 
-const buttonStyle: CSSProperties = {
+const buttonStyle = {
   marginTop: 8,
   padding: "15px",
   borderRadius: 16,
@@ -327,20 +331,20 @@ const buttonStyle: CSSProperties = {
   cursor: "pointer",
 };
 
-const appWrapper: CSSProperties = {
+const appWrapper = {
   minHeight: "100vh",
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "column" as const,
   background: "linear-gradient(180deg,#f8fbff,#eef4ff)",
 };
 
-const topBar: CSSProperties = {
+const topBar = {
   display: "flex",
   justifyContent: "flex-end",
   padding: "10px 14px",
 };
 
-const logoutButton: CSSProperties = {
+const logoutButton = {
   padding: "10px 14px",
   borderRadius: 14,
   border: "1px solid #d9e2f2",
@@ -348,15 +352,15 @@ const logoutButton: CSSProperties = {
   cursor: "pointer",
 };
 
-const navBar: CSSProperties = {
-  position: "sticky",
+const navBar = {
+  position: "sticky" as const,
   bottom: 0,
   background: "white",
   borderTop: "1px solid #dde6f5",
   padding: "10px",
 };
 
-const navGrid: CSSProperties = {
+const navGrid = {
   maxWidth: 780,
   margin: "0 auto",
   display: "grid",
